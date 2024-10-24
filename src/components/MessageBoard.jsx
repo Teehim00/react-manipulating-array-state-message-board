@@ -1,4 +1,27 @@
+import { useState } from "react";
+
 function MessageBoard() {
+  const [inputValue, setInputValue] = useState("");
+  const [showmsg, setShowMsg] = useState([]);
+
+  function addMsg(e) {
+    e.preventDefault();
+
+    const newMsg = {
+      id: showmsg.length + 1,
+      message: inputValue,
+    };
+
+    setShowMsg([...showmsg, newMsg]);
+
+    setInputValue("");
+  }
+
+  function deleteMsg(id) {
+    const updateMsg = showmsg.filter((data) => data.id !== id);
+    setShowMsg(updateMsg);
+  }
+
   return (
     <div className="app-wrapper">
       <h1 class="app-title">Message board</h1>
@@ -8,16 +31,27 @@ function MessageBoard() {
             id="message-text"
             name="message-text"
             type="text"
+            value={inputValue}
             placeholder="Enter message here"
+            onChange={(e) => setInputValue(e.target.value)}
           />
         </label>
-        <button className="submit-message-button">Submit</button>
+        <button className="submit-message-button" onClick={addMsg}>
+          Submit
+        </button>
       </div>
       <div class="board">
-        <div className="message">
-          <h1>Hello all ! This is first message.</h1>
-          <button className="delete-button">x</button>
-        </div>
+        {showmsg.map((data) => (
+          <div key={data.id} className="message">
+            <h1>{data.message}</h1>
+            <button
+              className="delete-button"
+              onClick={() => deleteMsg(data.id)}
+            >
+              x
+            </button>
+          </div>
+        ))}
       </div>
     </div>
   );
